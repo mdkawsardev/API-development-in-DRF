@@ -18,7 +18,7 @@ def index(request):
 #     return Response(details)
 
 @api_view(['GET', 'POST'])
-def students(request):
+def studentsList(request):
     if request.method == 'GET':
         obj = Students.objects.all()
         serializer = StudentSerializer(obj, many=True)
@@ -29,3 +29,22 @@ def students(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def students(request, pk):
+    try:
+        specific_obj = Students.objects.get(id=pk)
+    except Students.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = StudentSerializer(specific_obj)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = StudentSerializer(specific_obj, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        specific_obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
