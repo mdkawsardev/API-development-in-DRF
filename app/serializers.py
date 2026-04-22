@@ -5,4 +5,5 @@ class StudentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Students
-        fields = '__all__'
+        # exclude = ['id', 'name'] Displays all the data excerpt id and name
+        fields = '__all__' # Displays all the data
