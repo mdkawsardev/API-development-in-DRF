@@ -1,8 +1,14 @@
 from rest_framework import serializers
-from .models import Students
+from .models import *
+
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Country
+        fields = ['country_name']
 
 class StudentSerializer(serializers.ModelSerializer):
-    
+    country = CountrySerializer()
     class Meta:
         model = Students
         # exclude = ['id', 'name'] Displays all the data excerpt id and name
